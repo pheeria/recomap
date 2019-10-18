@@ -1,72 +1,43 @@
 <template>
-  <div style="position: absolute; width: 100%; height: 100%;">
-    <div style="height: 20%; overflow: auto;">
-      <h3>Simple map</h3>
-      <p>First marker is placed at {{ withPopup.lat }}, {{ withPopup.lng }}</p>
-      <p>Center is at {{ currentCenter }} and the zoom is: {{ currentZoom }}</p>
-      <button @click="showLongText">Toggle long popup</button>
-      <button @click="showMap = !showMap">Toggle map</button>
-    </div>
+  <main>
     <l-map
       :zoom="zoom"
       :center="center"
       :options="mapOptions"
-      style="height: 80%"
       @update:center="centerUpdate"
       @update:zoom="zoomUpdate"
     >
       <l-tile-layer :url="url" :attribution="attribution" />
-      <l-marker :lat-lng="withPopup">
-        <l-popup>
-          <div @click="innerClick">
-            I am a popup
-            <p v-show="showParagraph">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque
-              sed pretium nisl, ut sagittis sapien. Sed vel sollicitudin nisi.
-              Donec finibus semper metus id malesuada.
-            </p>
-          </div>
-        </l-popup>
-      </l-marker>
       <l-marker :lat-lng="withTooltip">
         <l-tooltip :options="{ permanent: true, interactive: true }">
-          <div @click="innerClick">
-            I am a tooltip
-            <p v-show="showParagraph">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque
-              sed pretium nisl, ut sagittis sapien. Sed vel sollicitudin nisi.
-              Donec finibus semper metus id malesuada.
-            </p>
-          </div>
+          <div @click="innerClick">Сәлем, Әлем!</div>
         </l-tooltip>
       </l-marker>
     </l-map>
-  </div>
+  </main>
 </template>
 
 <script>
 import { latLng } from "leaflet";
-import { LMap, LTileLayer, LMarker, LPopup, LTooltip } from "vue2-leaflet";
+import { LMap, LTileLayer, LMarker, LTooltip } from "vue2-leaflet";
 export default {
-  name: "Example",
+  name: "app",
   components: {
     LMap,
     LTileLayer,
     LMarker,
-    LPopup,
     LTooltip
   },
   data() {
     return {
-      zoom: 13,
-      center: latLng(47.41322, -1.219482),
+      zoom: 3,
+      center: latLng(43.24633, 76.92501),
       url: "http://{s}.tile.osm.org/{z}/{x}/{y}.png",
       attribution:
         '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
-      withPopup: latLng(47.41322, -1.219482),
-      withTooltip: latLng(47.41422, -1.250482),
+      withTooltip: latLng(43.24633, 76.92501),
       currentZoom: 11.5,
-      currentCenter: latLng(47.41322, -1.219482),
+      currentCenter: latLng(43.24633, 76.92501),
       showParagraph: false,
       mapOptions: {
         zoomSnap: 0.5
@@ -79,13 +50,16 @@ export default {
     },
     centerUpdate(center) {
       this.currentCenter = center;
-    },
-    showLongText() {
-      this.showParagraph = !this.showParagraph;
-    },
-    innerClick() {
-      alert("Click!");
     }
   }
 };
 </script>
+
+<style scoped>
+main {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  margin: -8px;
+}
+</style>
