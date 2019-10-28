@@ -8,7 +8,7 @@
       @update:zoom="zoomUpdate"
     >
       <l-tile-layer :url="url" :attribution="attribution" />
-      <div v-for="request in requests" :key="request">
+      <div v-for="request in requests" :key="request.time">
         <card :request="request" />
       </div>
     </l-map>
@@ -42,18 +42,7 @@ export default {
       },
       requests: [
         {
-          location: latLng(43.24633, 76.92501),
-          brand: "foodpanda",
-          count: 3,
-          platform: "android"
-        },
-        {
-          location: latLng(32.24633, 71.92501),
-          brand: "foodpanda",
-          count: 5,
-          platform: "apple"
-        },
-        {
+          time: 1572301996671,
           location: latLng(12.24633, 91.92501),
           brand: "foodpanda",
           count: 1,
@@ -68,6 +57,30 @@ export default {
     },
     centerUpdate(center) {
       this.currentCenter = center;
+    },
+    longify(location) {
+      return latLng(location.lat, location.lng);
+    }
+  },
+  sockets: {
+    connect() {
+      console.log("Socket connected");
+    },
+    swimlanes(msg) {
+      const now = Date.now();
+
+      const newRequest = {
+        time: now,
+        ...msg,
+        location: this.longify(msg.location)
+      };
+
+      this.requests = [
+        ...this.requests.filter(req => now - req.time < 1000000),
+        newRequest
+      ];
+
+      console.log(this.requests);
     }
   }
 };

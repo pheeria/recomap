@@ -2,6 +2,7 @@ import Vue from "vue";
 import App from "./App.vue";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
+import VueSocketIO from "vue-socket.io";
 
 delete L.Icon.Default.prototype._getIconUrl;
 
@@ -12,6 +13,12 @@ L.Icon.Default.mergeOptions({
 });
 
 Vue.config.productionTip = false;
+
+Vue.use(
+  new VueSocketIO({
+    connection: "http://127.0.0.1:5000"
+  })
+);
 
 new Vue({
   render: h => h(App)
