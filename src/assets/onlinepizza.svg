@@ -1,0 +1,8 @@
+<svg width="40px" height="32px" viewBox="0 0 40 32" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <g id="Artboard" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="onlinepizz_logo" transform="translate(0.000000, 2.000000)" fill-rule="nonzero">
+            <path d="M16.0867133,16.9460581 L18,18.9377593 C13.8713287,23.0207469 7.22517483,23.0207469 3.0965035,18.9377593 C-1.03216783,14.8547718 -1.03216783,8.08298755 3.0965035,4 L5.00979021,5.99170124 C1.98881119,8.97925311 1.98881119,13.9585062 5.00979021,16.9460581 C8.03076923,19.93361 13.0657343,20.033195 16.0867133,16.9460581 Z" id="onlinepizza" fill="#FF3633"></path>
+            <path d="M10,2 L10,13 L21,13 C21,6.9 16.0550459,2 10,2" id="path-1-op_1_" fill="#272CC0"></path>
+        </g>
+    </g>
+</svg>
