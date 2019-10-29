@@ -40,7 +40,7 @@ export default {
         {
           time: 1572301996671,
           location: latLng(12.24633, 91.92501),
-          brand: "foodpanda",
+          brand: "pedidosya",
           count: 1,
           platform: "web"
         }
