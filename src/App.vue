@@ -27,9 +27,9 @@ export default {
     return {
       zoom: 3,
       center: latLng(43.24633, 76.92501),
-      url: "http://{s}.tile.osm.org/{z}/{x}/{y}.png",
+      url: "https://{s}.tile.osm.org/{z}/{x}/{y}.png",
       attribution:
-        '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
+        '&copy; <a href="https://osm.org/copyright">OpenStreetMap</a> contributors',
       currentZoom: 11.5,
       currentCenter: latLng(43.24633, 76.92501),
       showParagraph: false,
