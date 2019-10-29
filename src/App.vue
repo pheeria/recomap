@@ -1,12 +1,6 @@
 <template>
   <main>
-    <l-map
-      :zoom="zoom"
-      :center="center"
-      :options="mapOptions"
-      @update:center="centerUpdate"
-      @update:zoom="zoomUpdate"
-    >
+    <l-map :bounds="bounds" :options="mapOptions">
       <l-tile-layer :url="url" :attribution="attribution" />
       <div v-for="request in requests" :key="request.time">
         <card :request="request" />
@@ -19,6 +13,8 @@
 import { latLng } from "leaflet";
 import { LMap, LTileLayer } from "vue2-leaflet";
 import Card from "./components/Card.vue";
+import bbox from "@turf/bbox";
+import bboxPolygon from "@turf/bbox-polygon";
 
 export default {
   name: "app",
@@ -46,20 +42,36 @@ export default {
           location: latLng(12.24633, 91.92501),
           brand: "foodpanda",
           count: 1,
-          platform: "firefox"
+          platform: "web"
         }
       ]
     };
   },
-  methods: {
-    zoomUpdate(zoom) {
-      this.currentZoom = zoom;
-    },
-    centerUpdate(center) {
-      this.currentCenter = center;
-    },
-    longify(location) {
-      return latLng(location.lat, location.lng);
+  computed: {
+    bounds() {
+      let [west, south, east, north] = bbox({
+        type: "FeatureCollection",
+        features: this.requests
+          .map(r =>
+            bbox({
+              type: "Point",
+              coordinates: [r.location.lng, r.location.lat]
+            })
+          )
+          .map(box => bboxPolygon(box))
+      });
+
+      // If bounding box represents a dot, we need to spread it out a bit
+      if (west === east) {
+        west--;
+        east++;
+      }
+      if (south === north) {
+        south--;
+        north++;
+      }
+
+      return [[south, west], [north, east]];
     }
   },
   sockets: {
@@ -71,16 +83,13 @@ export default {
 
       const newRequest = {
         time: now,
-        ...msg,
-        location: this.longify(msg.location)
+        ...msg
       };
 
       this.requests = [
-        ...this.requests.filter(req => now - req.time < 1000000),
+        ...this.requests.filter(req => now - req.time < 60000),
         newRequest
       ];
-
-      console.log(this.requests);
     }
   }
 };
