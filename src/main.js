@@ -16,7 +16,7 @@ Vue.config.productionTip = false;
 
 Vue.use(
   new VueSocketIO({
-    connection: "http://127.0.0.1:5000"
+    connection: "https://recoba.herokuapp.com"
   })
 );
 
