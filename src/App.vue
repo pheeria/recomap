@@ -31,10 +31,14 @@ export default {
       },
       requests: [
         {
+          originalObj: {
+            request_id: "23235nsd"
+          },
           time: 1572301996671,
           location: latLng(12.24633, 91.92501),
           brand: "talabat",
-          count: 1,
+          count: 4,
+          total: 20,
           platform: "android"
         }
       ],
@@ -80,8 +84,11 @@ export default {
       const now = Date.now();
 
       const newRequest = {
-        time: now,
-        ...msg
+        ...msg,
+        count: msg.originalObj.swimlanes.filter(s => s.restaurant_ids.length)
+          .length,
+        total: msg.count,
+        time: now
       };
 
       const newRequests = [

@@ -2,9 +2,12 @@
   <l-marker :lat-lng="request.location">
     <l-tooltip :options="{ permanent: true, interactive: true }">
       <div class="card">
-        <img :src="resolveImage(request.brand)" :alt="request.brand" />
-        <span>#{{request.count}}</span>
-        <img :src="resolveImage(request.platform)" :alt="request.platform" />
+        <span
+          class="count"
+          :class="{alert: request.count === 0, success: request.count === request.total}"
+        >{{request.count}}/{{request.total}}</span>
+        <img class="brand" :src="resolveImage(request.brand)" :alt="request.brand" />
+        <img class="platform" :src="resolveImage(request.platform)" :alt="request.platform" />
       </div>
     </l-tooltip>
   </l-marker>
@@ -26,6 +29,7 @@ export default {
           location: Object,
           brand: String,
           count: Number,
+          total: Number,
           platform: String
         };
       }
@@ -42,11 +46,31 @@ export default {
 
 <style scoped>
 img {
-  width: 32px;
+  width: 16px;
 }
 .card {
-  display: flex;
-  flex-direction: row;
+  display: grid;
+  grid-template-areas:
+    "count count brand"
+    "count count platform";
+  grid-gap: 10px;
   font-size: 2em;
+  font-weight: bolder;
+}
+.count {
+  grid-area: count;
+  vertical-align: middle;
+}
+.brand {
+  grid-area: brand;
+}
+.platform {
+  grid: platform;
+}
+.alert {
+  color: #ff0e11;
+}
+.success {
+  color: #00a900;
 }
 </style>
