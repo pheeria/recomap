@@ -42,7 +42,7 @@ export default {
 
 <style scoped>
 img {
-  width: 42px;
+  width: 32px;
 }
 .card {
   display: flex;

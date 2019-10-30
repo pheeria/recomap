@@ -2,9 +2,7 @@
   <main>
     <l-map :bounds="bounds" :options="mapOptions">
       <l-tile-layer :url="url" :attribution="attribution" />
-      <div v-for="request in requests" :key="request.time">
-        <card :request="request" />
-      </div>
+      <card v-for="request in requests" :key="request.originalObj.request_id" :request="request" />
     </l-map>
   </main>
 </template>
@@ -35,18 +33,19 @@ export default {
         {
           time: 1572301996671,
           location: latLng(12.24633, 91.92501),
-          brand: "pedidosya",
+          brand: "talabat",
           count: 1,
-          platform: "web"
+          platform: "android"
         }
-      ]
+      ],
+      bounds: [[10.1, 140.2], [10.4, 45.3]]
     };
   },
-  computed: {
-    bounds() {
-      let [west, south, east, north] = bbox({
+  methods: {
+    calculateBounds(requests) {
+      const [west, south, east, north] = bbox({
         type: "FeatureCollection",
-        features: this.requests
+        features: requests
           .map(r =>
             bbox({
               type: "Point",
@@ -56,17 +55,21 @@ export default {
           .map(box => bboxPolygon(box))
       });
 
-      // If bounding box represents a dot, we need to spread it out a bit
-      if (west === east) {
-        west--;
-        east++;
-      }
-      if (south === north) {
-        south--;
-        north++;
-      }
-
       return [[south, west], [north, east]];
+    },
+    visibleOnMap(requests) {
+      const minX = this.bounds[0][1];
+      const minY = this.bounds[0][0];
+      const maxX = this.bounds[1][1];
+      const maxY = this.bounds[1][0];
+
+      return requests.every(
+        r =>
+          minY <= r.location.lat &&
+          r.location.lat <= maxY &&
+          minX <= r.location.lng &&
+          r.location.lng <= maxX
+      );
     }
   },
   sockets: {
@@ -81,10 +84,16 @@ export default {
         ...msg
       };
 
-      this.requests = [
-        ...this.requests.filter(req => now - req.time < 60000),
+      const newRequests = [
+        ...this.requests.filter(req => now - req.time < 1500),
         newRequest
       ];
+
+      if (!this.visibleOnMap(newRequests)) {
+        this.bounds = this.calculateBounds(newRequests);
+      }
+
+      this.requests = newRequests;
     }
   }
 };
