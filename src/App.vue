@@ -100,19 +100,16 @@ export default {
 </script>
 
 <style>
+@import url("https://fonts.googleapis.com/css?family=Righteous&display=swap");
+
 main {
   position: absolute;
   width: 100%;
   height: 100%;
   margin: -8px;
-  font-family: "Sans Forgetica";
 }
 
-@font-face {
-  font-family: "Sans Forgetica";
-  src: url("./assets/SansForgetica-Regular.otf") format("opentype");
-}
 * {
-  font-family: "Sans Forgetica";
+  font-family: "Righteous", cursive;
 }
 </style>
