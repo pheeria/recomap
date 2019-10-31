@@ -44,14 +44,14 @@ export default {
     calculateBounds(requests) {
       const [west, south, east, north] = bbox({
         type: "FeatureCollection",
-        features: requests
-          .map(r =>
+        features: requests.map(r =>
+          bboxPolygon(
             bbox({
               type: "Point",
               coordinates: [r.location.lng, r.location.lat]
             })
           )
-          .map(box => bboxPolygon(box))
+        )
       });
 
       return [[south, west], [north, east]];

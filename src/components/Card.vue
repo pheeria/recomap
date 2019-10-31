@@ -1,6 +1,6 @@
 <template>
   <l-marker :lat-lng="request.location">
-    <l-tooltip :options="{ permanent: true, interactive: true }">
+    <l-tooltip :options="tooltipOptions">
       <div class="card">
         <span
           class="count"
@@ -21,6 +21,11 @@ export default {
     LMarker,
     LTooltip
   },
+  data() {
+    return {
+      tooltipOptions: { permanent: true, interactive: false }
+    };
+  },
   props: {
     request: {
       type: Object,
@@ -37,7 +42,7 @@ export default {
   },
   methods: {
     resolveImage: function(image) {
-      let images = require.context("../assets/", false, /\.png$|\.jpg$|\.svg$/);
+      const images = require.context("../assets/", false, /\.svg$/);
       return images(`./${image}.svg`);
     }
   }
