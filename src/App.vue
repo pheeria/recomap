@@ -1,8 +1,8 @@
 <template>
   <main>
-    <l-map :bounds="bounds" :options="mapOptions">
+    <l-map :bounds="bounds">
       <l-tile-layer :url="url" :attribution="attribution" />
-      <card v-for="request in requests" :key="request.originalObj.request_id" :request="request" />
+      <card v-for="request in requests" :key="request.id" :request="request" />
     </l-map>
   </main>
 </template>
@@ -26,14 +26,9 @@ export default {
       url: "https://{s}.tile.osm.org/{z}/{x}/{y}.png",
       attribution:
         '&copy; <a href="https://osm.org/copyright">OpenStreetMap</a> contributors',
-      mapOptions: {
-        zoomSnap: 0.5
-      },
       requests: [
         {
-          originalObj: {
-            request_id: "23235nsd"
-          },
+          id: "23235nsd",
           time: 1572301996671,
           location: latLng(12.24633, 91.92501),
           brand: "talabat",
@@ -85,16 +80,12 @@ export default {
 
       const newRequest = {
         ...msg,
-        count: msg.originalObj.swimlanes.filter(s => s.restaurant_ids.length)
-          .length,
-        total: msg.count,
         time: now
       };
 
-      const newRequests = [
-        ...this.requests.filter(req => now - req.time < 1500),
-        newRequest
-      ];
+      const newRequests = this.requests
+        .filter(req => now - req.time < 1465)
+        .concat(newRequest);
 
       if (!this.visibleOnMap(newRequests)) {
         this.bounds = this.calculateBounds(newRequests);
