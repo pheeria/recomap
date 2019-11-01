@@ -56,18 +56,12 @@ export default {
 
       return [[south, west], [north, east]];
     },
-    visibleOnMap(requests) {
-      const minX = this.bounds[0][1];
-      const minY = this.bounds[0][0];
-      const maxX = this.bounds[1][1];
-      const maxY = this.bounds[1][0];
-
-      return requests.every(
-        r =>
-          minY <= r.location.lat &&
-          r.location.lat <= maxY &&
-          minX <= r.location.lng &&
-          r.location.lng <= maxX
+    visibleOnMap(request) {
+      return (
+        this.bounds[0][0] <= request.location.lat &&
+        request.location.lat <= this.bounds[1][0] &&
+        this.bounds[0][1] <= request.location.lng &&
+        request.location.lng <= this.bounds[1][1]
       );
     }
   },
@@ -87,7 +81,7 @@ export default {
         .filter(req => now - req.time < 1465)
         .concat(newRequest);
 
-      if (!this.visibleOnMap(newRequests)) {
+      if (!this.visibleOnMap(newRequest)) {
         this.bounds = this.calculateBounds(newRequests);
       }
 
