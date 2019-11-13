@@ -32,12 +32,14 @@ export default {
           time: 1572301996671,
           location: latLng(12.24633, 91.92501),
           brand: "talabat",
+          country: "in",
           count: 4,
           total: 20,
           platform: "android"
         }
       ],
-      bounds: [[10.1, 140.2], [10.4, 45.3]]
+      bounds: [[10.1, 140.2], [10.4, 45.3]],
+      lastRecenter: 1572301996671,
     };
   },
   methods: {
@@ -63,6 +65,13 @@ export default {
         this.bounds[0][1] <= request.location.lng &&
         request.location.lng <= this.bounds[1][1]
       );
+    },
+    similar(aRequest, newRequest) {
+      return (
+        aRequest.country === newRequest.country
+        && aRequest.brand === newRequest.brand
+        && aRequest.platform === newRequest.platform
+      );
     }
   },
   sockets: {
@@ -77,12 +86,27 @@ export default {
         time: now
       };
 
-      const newRequests = this.requests
-        .filter(req => now - req.time < 1465)
-        .concat(newRequest);
+      let newRequests = this.requests
+          .filter(req => now - req.time < 1200);
 
-      if (!this.visibleOnMap(newRequest)) {
+      if (newRequests.some(req => this.similar(req, newRequest))) {
+        newRequests = newRequests
+          .map(req => this.similar(req, newRequest) ? {
+              ...req,
+              count: req.count + newRequest.count,
+              total: req.total + newRequest.total,
+              time: req.time + 265
+            }
+            : req
+          )
+      } else {
+        newRequests = newRequests
+          .concat(newRequest);
+      }
+
+      if (now - this.lastRecenter > 10000 && !this.visibleOnMap(newRequest)) {
         this.bounds = this.calculateBounds(newRequests);
+        this.lastRecenter = now;
       }
 
       this.requests = newRequests;
